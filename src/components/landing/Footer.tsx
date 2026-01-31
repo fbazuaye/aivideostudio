@@ -36,9 +36,10 @@ export const Footer = () => {
           </nav>
 
           {/* Copyright */}
-          <p className="text-sm text-muted-foreground">
-            © 2025 AI Video Pro. All rights reserved.
-          </p>
+          <div className="text-sm text-muted-foreground text-center md:text-right">
+            <p>© 2025 AI Video Pro. All rights reserved.</p>
+            <p className="mt-1">Powered By LiveGig Ai Academy div of LiveGig Ltd</p>
+          </div>
         </div>
       </div>
     </footer>

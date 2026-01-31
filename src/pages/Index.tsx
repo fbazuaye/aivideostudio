@@ -1,12 +1,39 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Header } from "@/components/landing/Header";
+import { HeroSection } from "@/components/landing/HeroSection";
+import { PainSolutionSection } from "@/components/landing/PainSolutionSection";
+import { BenefitsSection } from "@/components/landing/BenefitsSection";
+import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
+import { VisualProofSection } from "@/components/landing/VisualProofSection";
+import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
+import { ProgramTeaserSection } from "@/components/landing/ProgramTeaserSection";
+import { FAQSection } from "@/components/landing/FAQSection";
+import { CTASection } from "@/components/landing/CTASection";
+import { Footer } from "@/components/landing/Footer";
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main>
+        <HeroSection />
+        <PainSolutionSection />
+        <section id="benefits">
+          <BenefitsSection />
+        </section>
+        <section id="how-it-works">
+          <HowItWorksSection />
+        </section>
+        <VisualProofSection />
+        <section id="testimonials">
+          <TestimonialsSection />
+        </section>
+        <ProgramTeaserSection />
+        <section id="faq">
+          <FAQSection />
+        </section>
+        <CTASection />
+      </main>
+      <Footer />
     </div>
   );
 };

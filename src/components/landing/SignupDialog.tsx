@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, forwardRef } from "react";
 import { motion } from "framer-motion";
 import { Play, Loader2, CheckCircle, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ interface SignupDialogProps {
   children: React.ReactNode;
 }
 
-export const SignupDialog = ({ children }: SignupDialogProps) => {
+export const SignupDialog = forwardRef<HTMLDivElement, SignupDialogProps>(({ children }, ref) => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -75,11 +75,12 @@ export const SignupDialog = ({ children }: SignupDialogProps) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-md bg-card border-border">
+    <div ref={ref}>
+      <Dialog open={open} onOpenChange={handleOpenChange}>
+        <DialogTrigger asChild>
+          {children}
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-md bg-card border-border">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">
             {isSuccess ? "You're In! 🎉" : "Reserve Your Free Seat"}
@@ -150,7 +151,10 @@ export const SignupDialog = ({ children }: SignupDialogProps) => {
             </p>
           </form>
         )}
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
-};
+});
+
+SignupDialog.displayName = "SignupDialog";

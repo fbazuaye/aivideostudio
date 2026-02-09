@@ -61,10 +61,8 @@ export const VisualProofSection = () => {
                 <video
                   src={video.src}
                   className="w-full h-full object-cover"
-                  muted
                   loop
                   playsInline
-                  autoPlay
                   onMouseEnter={(e) => e.currentTarget.play()}
                   onMouseLeave={(e) => {
                     e.currentTarget.pause();

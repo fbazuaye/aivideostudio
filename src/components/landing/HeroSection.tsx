@@ -42,7 +42,7 @@ export const HeroSection = () => {
 
             {/* Subheadline */}
             <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0">
-              Join our free live training and create your first AI video in 90 minutes. 
+              Join our introductory live whatsapp training and create your first AI video in 90 minutes. 
               Learn the exact process top creators use to build faceless channels.
             </p>
 

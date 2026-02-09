@@ -18,13 +18,10 @@ export const CountdownTimer = ({
   targetDate,
   className = ""
 }: CountdownTimerProps) => {
-  // Default to 3 days from now if no target date provided
+  // Set a specific target date: March 1, 2026 at 7 PM UTC
   const [target] = useState(() => {
     if (targetDate) return targetDate;
-    const date = new Date();
-    date.setDate(date.getDate() + 3);
-    date.setHours(19, 0, 0, 0); // 7 PM
-    return date;
+    return new Date("2026-03-01T19:00:00Z");
   });
 
   const calculateTimeLeft = (): TimeLeft => {

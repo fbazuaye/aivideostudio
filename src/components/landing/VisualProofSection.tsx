@@ -47,7 +47,7 @@ export const VisualProofSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {videoExamples.map((video, index) => (
             <motion.div
               key={index}
@@ -57,13 +57,14 @@ export const VisualProofSection = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="group"
             >
-              <div className="relative aspect-video rounded-xl border border-border overflow-hidden mb-4 bg-black">
+              <div className="relative aspect-[9/16] sm:aspect-video rounded-xl border border-border overflow-hidden mb-4 bg-black">
                 <video
                   src={video.src}
                   className="w-full h-full object-cover"
                   muted
                   loop
                   playsInline
+                  autoPlay
                   onMouseEnter={(e) => e.currentTarget.play()}
                   onMouseLeave={(e) => {
                     e.currentTarget.pause();

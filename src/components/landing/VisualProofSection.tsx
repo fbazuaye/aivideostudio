@@ -1,5 +1,8 @@
 import { motion } from "framer-motion";
-import { Play, Eye, ThumbsUp } from "lucide-react";
+import { Eye, ThumbsUp } from "lucide-react";
+import video1 from "@/assets/Ai_video_1.mp4";
+import video2 from "@/assets/Ai_video_2.mp4";
+import video3 from "@/assets/Ai_video_3.mp4";
 
 const videoExamples = [
   {
@@ -7,18 +10,21 @@ const videoExamples = [
     views: "245K views",
     likes: "12K",
     category: "Technology",
+    src: video1,
   },
   {
     title: "History Mysteries",
     views: "189K views",
     likes: "9.4K",
     category: "Education",
+    src: video2,
   },
   {
     title: "Money Tips",
     views: "312K views",
     likes: "18K",
     category: "Finance",
+    src: video3,
   },
 ];
 
@@ -51,25 +57,27 @@ export const VisualProofSection = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="group"
             >
-              <div className="relative aspect-video rounded-xl bg-gradient-card border border-border overflow-hidden mb-4">
-                {/* Placeholder for video thumbnail */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/10" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center cursor-pointer glow-soft"
-                  >
-                    <Play className="w-6 h-6 text-primary-foreground ml-1" />
-                  </motion.div>
-                </div>
+              <div className="relative aspect-video rounded-xl border border-border overflow-hidden mb-4 bg-black">
+                <video
+                  src={video.src}
+                  className="w-full h-full object-cover"
+                  muted
+                  loop
+                  playsInline
+                  onMouseEnter={(e) => e.currentTarget.play()}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.pause();
+                    e.currentTarget.currentTime = 0;
+                  }}
+                />
                 {/* Category badge */}
-                <div className="absolute top-3 left-3">
+                <div className="absolute top-3 left-3 pointer-events-none">
                   <span className="px-3 py-1 bg-background/80 backdrop-blur-sm rounded-full text-xs font-medium">
                     {video.category}
                   </span>
                 </div>
               </div>
-              
+
               <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors">
                 {video.title}
               </h3>

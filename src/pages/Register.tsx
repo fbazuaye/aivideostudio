@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Loader2, CheckCircle, User, Mail } from "lucide-react";
+import { Loader2, CheckCircle, User, Mail, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -63,6 +64,12 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-12">
+      <Link to="/" className="absolute top-6 left-6 z-20">
+        <Button variant="ghost" className="gap-2 text-muted-foreground hover:text-foreground">
+          <ArrowLeft className="w-4 h-4" />
+          Back to Home
+        </Button>
+      </Link>
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
 

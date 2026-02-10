@@ -23,6 +23,7 @@ const Admin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
+  const [isSignup, setIsSignup] = useState(false);
   const [signups, setSignups] = useState<Signup[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -65,14 +66,27 @@ const Admin = () => {
     if (isAdmin) fetchSignups();
   }, [isAdmin]);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      toast.error(error.message);
+    if (isSignup) {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: window.location.origin },
+      });
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success("Check your email to confirm your account!");
+      }
     } else {
-      toast.success("Welcome!");
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success("Welcome!");
+      }
     }
     setLoginLoading(false);
   };
@@ -181,9 +195,25 @@ const Admin = () => {
             </div>
             <h1 className="text-2xl font-bold text-center mb-2">Admin Access</h1>
             <p className="text-muted-foreground text-center text-sm mb-6">
-              Sign in with your admin account
+              {isSignup ? "Create your admin account" : "Sign in with your admin account"}
             </p>
-            <form onSubmit={handleLogin} className="space-y-4">
+            <div className="flex mb-4 rounded-lg bg-secondary/50 p-1">
+              <button
+                type="button"
+                onClick={() => setIsSignup(false)}
+                className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${!isSignup ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                Sign In
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsSignup(true)}
+                className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${isSignup ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                Sign Up
+              </button>
+            </div>
+            <form onSubmit={handleAuth} className="space-y-4">
               <Input
                 type="email"
                 placeholder="Email"
@@ -199,10 +229,11 @@ const Admin = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="bg-secondary/50 border-border"
                 required
+                minLength={6}
               />
               <Button type="submit" className="w-full bg-gradient-primary text-primary-foreground" disabled={loginLoading}>
                 {loginLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                Sign In
+                {isSignup ? "Sign Up" : "Sign In"}
               </Button>
             </form>
             <Link to="/" className="flex items-center justify-center gap-2 mt-4 text-sm text-muted-foreground hover:text-foreground transition-colors">

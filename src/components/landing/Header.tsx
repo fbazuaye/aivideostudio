@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Sparkles, Menu } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -48,12 +49,14 @@ export const Header = () => {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-4"
           >
-            <Button 
-              size="sm" 
-              className="hidden sm:flex bg-gradient-primary text-primary-foreground font-medium rounded-lg"
-            >
-              Get Free Access
-            </Button>
+            <Link to="/register">
+              <Button 
+                size="sm" 
+                className="hidden sm:flex bg-gradient-primary text-primary-foreground font-medium rounded-lg"
+              >
+                Click to Register
+              </Button>
+            </Link>
             <button 
               className="md:hidden p-2"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -84,12 +87,14 @@ export const Header = () => {
               <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 FAQ
               </a>
-              <Button 
-                size="sm" 
-                className="bg-gradient-primary text-primary-foreground font-medium rounded-lg w-full"
-              >
-                Get Free Access
-              </Button>
+              <Link to="/register">
+                <Button 
+                  size="sm" 
+                  className="bg-gradient-primary text-primary-foreground font-medium rounded-lg w-full"
+                >
+                  Click to Register
+                </Button>
+              </Link>
             </div>
           </motion.nav>
         )}

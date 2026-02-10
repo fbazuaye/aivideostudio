@@ -1,10 +1,11 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Shield, LogOut, Users, Mail, Calendar, Loader2, ArrowLeft, Search, Download, UserCheck } from "lucide-react";
+import { Shield, LogOut, Users, Mail, Calendar, Loader2, ArrowLeft, Search, Download, UserCheck, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import * as XLSX from "xlsx";
 
 interface Signup {
@@ -15,46 +16,83 @@ interface Signup {
   created_at: string;
 }
 
-const ADMIN_PASSWORD = "aivideopro2025";
-
 const Admin = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [session, setSession] = useState<any>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
   const [signups, setSignups] = useState<Signup[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      sessionStorage.setItem("admin_auth", "true");
-      toast.success("Welcome, admin!");
-    } else {
-      toast.error("Invalid password");
-    }
-  };
-
+  // Listen for auth state changes
   useEffect(() => {
-    if (sessionStorage.getItem("admin_auth") === "true") {
-      setIsAuthenticated(true);
-    }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (!session) {
+        setIsAdmin(null);
+        setAuthLoading(false);
+      }
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (!session) setAuthLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
+  // Check admin role when session changes
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchSignups();
+    if (!session) return;
+    const checkAdmin = async () => {
+      setAuthLoading(true);
+      const { data, error } = await supabase.rpc("has_role", {
+        _user_id: session.user.id,
+        _role: "admin",
+      });
+      setIsAdmin(error ? false : !!data);
+      setAuthLoading(false);
+    };
+    checkAdmin();
+  }, [session]);
+
+  // Fetch signups when admin is confirmed
+  useEffect(() => {
+    if (isAdmin) fetchSignups();
+  }, [isAdmin]);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("Welcome!");
     }
-  }, [isAuthenticated]);
+    setLoginLoading(false);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
+    setIsAdmin(null);
+    setSignups([]);
+  };
 
   const fetchSignups = async () => {
     setIsLoading(true);
     try {
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-signups`,
         {
           headers: {
-            "x-custom-auth": ADMIN_PASSWORD,
+            Authorization: `Bearer ${currentSession?.access_token}`,
             "Content-Type": "application/json",
           },
         }
@@ -68,11 +106,6 @@ const Admin = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    sessionStorage.removeItem("admin_auth");
   };
 
   const filteredSignups = useMemo(() => {
@@ -122,7 +155,17 @@ const Admin = () => {
     toast.success("Excel file downloaded!");
   };
 
-  if (!isAuthenticated) {
+  // Loading state
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // Not logged in — show login form
+  if (!session) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-4">
         <motion.div
@@ -138,17 +181,27 @@ const Admin = () => {
             </div>
             <h1 className="text-2xl font-bold text-center mb-2">Admin Access</h1>
             <p className="text-muted-foreground text-center text-sm mb-6">
-              Enter the admin password to continue
+              Sign in with your admin account
             </p>
             <form onSubmit={handleLogin} className="space-y-4">
+              <Input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-secondary/50 border-border"
+                required
+              />
               <Input
                 type="password"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="bg-secondary/50 border-border"
+                required
               />
-              <Button type="submit" className="w-full bg-gradient-primary text-primary-foreground">
+              <Button type="submit" className="w-full bg-gradient-primary text-primary-foreground" disabled={loginLoading}>
+                {loginLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                 Sign In
               </Button>
             </form>
@@ -162,6 +215,40 @@ const Admin = () => {
     );
   }
 
+  // Logged in but not admin
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-sm text-center"
+        >
+          <div className="bg-card border border-border rounded-2xl p-8">
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-xl bg-destructive/10 flex items-center justify-center">
+                <AlertTriangle className="w-6 h-6 text-destructive" />
+              </div>
+            </div>
+            <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
+            <p className="text-muted-foreground text-sm mb-6">
+              Your account does not have admin privileges.
+            </p>
+            <Button variant="outline" onClick={handleLogout} className="w-full">
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
+            <Link to="/" className="flex items-center justify-center gap-2 mt-4 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+              Back to site
+            </Link>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Admin dashboard
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card/50 backdrop-blur-lg sticky top-0 z-50">

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Loader2, CheckCircle, User, Mail, ArrowLeft } from "lucide-react";
+import { Loader2, CheckCircle, User, Mail, ArrowLeft, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,12 +13,14 @@ import { z } from "zod";
 const registerSchema = z.object({
   fullName: z.string().trim().min(2, "Full name must be at least 2 characters").max(100),
   email: z.string().trim().email("Please enter a valid email address").max(255),
+  referralCode: z.string().trim().min(1, "Please enter a referral code or 1 if not referred").max(50),
   acceptTerms: z.literal(true, { errorMap: () => ({ message: "You must accept the Terms and Conditions" }) }),
 });
 
 const Register = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [referralCode, setReferralCode] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -26,7 +28,7 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const validation = registerSchema.safeParse({ fullName, email, acceptTerms });
+    const validation = registerSchema.safeParse({ fullName, email, referralCode, acceptTerms });
     if (!validation.success) {
       toast.error(validation.error.errors[0].message);
       return;
@@ -37,7 +39,7 @@ const Register = () => {
     try {
       const { error } = await supabase
         .from("training_signups")
-        .insert({ email: email.trim().toLowerCase() });
+        .insert({ email: email.trim().toLowerCase(), full_name: fullName.trim(), referral_code: referralCode.trim() });
 
       if (error) {
         if (error.code === "23505") {
@@ -137,6 +139,24 @@ const Register = () => {
                     className="bg-secondary/50 border-border"
                     disabled={isLoading}
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="referralCode" className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-primary" />
+                    Referral Code
+                  </Label>
+                  <Input
+                    id="referralCode"
+                    type="text"
+                    placeholder="Enter referral code or 1 if not referred"
+                    value={referralCode}
+                    onChange={(e) => setReferralCode(e.target.value)}
+                    required
+                    className="bg-secondary/50 border-border"
+                    disabled={isLoading}
+                  />
+                  <p className="text-xs text-muted-foreground">Enter 1 if you were not referred by anyone</p>
                 </div>
 
                 <div className="flex items-start space-x-3">

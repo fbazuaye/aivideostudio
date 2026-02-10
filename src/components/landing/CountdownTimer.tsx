@@ -21,7 +21,7 @@ export const CountdownTimer = ({
   // Set a specific target date: March 1, 2026 at 7 PM UTC
   const [target] = useState(() => {
     if (targetDate) return targetDate;
-    return new Date("2026-03-01T19:00:00Z");
+    return new Date("2026-04-06T18:00:00Z");
   });
 
   const calculateTimeLeft = (): TimeLeft => {

@@ -29,7 +29,7 @@ export const HeroSection = () => {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20"
             >
               <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-primary">Free Live Training</span>
+              <span className="text-sm font-medium text-primary">Live Whatsapp Training</span>
             </motion.div>
 
             {/* Headline */}
@@ -98,14 +98,6 @@ export const HeroSection = () => {
               <span className="text-sm font-medium">2,847 creators joined</span>
             </motion.div>
             
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="absolute -top-4 -right-4 hidden md:block bg-primary text-primary-foreground rounded-lg px-4 py-2 shadow-lg"
-            >
-              <span className="text-sm font-bold">100% Free</span>
-            </motion.div>
           </motion.div>
         </div>
       </div>

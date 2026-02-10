@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Play, Clock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SignupDialog } from "./SignupDialog";
+import { Link } from "react-router-dom";
 import { CountdownTimer } from "./CountdownTimer";
 
 export const CTASection = () => {
@@ -51,7 +51,7 @@ export const CTASection = () => {
             </div>
           </div>
 
-          <SignupDialog>
+          <Link to="/register">
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -61,10 +61,10 @@ export const CTASection = () => {
                 className="bg-gradient-primary text-primary-foreground font-semibold text-lg px-10 py-7 rounded-xl glow-primary animate-pulse-glow"
               >
                 <Play className="w-5 h-5 mr-2" />
-                Reserve My Free Seat
+                Click to Register
               </Button>
             </motion.div>
-          </SignupDialog>
+          </Link>
 
           <p className="text-sm text-muted-foreground mt-4">
             100% free • No credit card required • Instant access

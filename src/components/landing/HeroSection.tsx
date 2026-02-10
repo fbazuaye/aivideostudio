@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Play, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SignupDialog } from "./SignupDialog";
+import { Link } from "react-router-dom";
 import { CountdownTimer } from "./CountdownTimer";
 import { VideoEmbed } from "./VideoEmbed";
 
@@ -63,15 +63,15 @@ export const HeroSection = () => {
               transition={{ delay: 0.3, duration: 0.5 }}
               className="pt-2"
             >
-              <SignupDialog>
+              <Link to="/register">
                 <Button 
                   size="lg" 
                   className="bg-gradient-primary text-primary-foreground font-semibold text-lg px-8 py-6 rounded-xl glow-primary hover:scale-105 transition-transform animate-pulse-glow"
                 >
                   <Play className="w-5 h-5 mr-2" />
-                  Reserve My Free Seat
+                  Click to Register
                 </Button>
-              </SignupDialog>
+              </Link>
               <p className="text-sm text-muted-foreground mt-3">
                 No credit card required • Limited spots available
               </p>

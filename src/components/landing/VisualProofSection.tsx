@@ -70,8 +70,8 @@ export const VisualProofSection = () => {
                   }}
                 />
                 {/* Category badge */}
-                <div className="absolute top-3 left-3 pointer-events-none">
-                  <span className="px-3 py-1 bg-background/80 backdrop-blur-sm rounded-full text-xs font-medium">
+                <div className="absolute bottom-3 left-2 pointer-events-none">
+                  <span className="px-2 py-0.5 bg-background/80 backdrop-blur-sm rounded-full text-[10px] font-medium">
                     {video.category}
                   </span>
                 </div>

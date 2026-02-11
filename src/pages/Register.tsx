@@ -156,7 +156,7 @@ const Register = () => {
                     className="bg-secondary/50 border-border"
                     disabled={isLoading}
                   />
-                  <p className="text-xs text-muted-foreground">Enter 1 if you were not referred by anyone</p>
+                  <p className="text-xs text-muted-foreground">Enter N if you were not referred by anyone</p>
                 </div>
 
                 <div className="flex items-start space-x-3">

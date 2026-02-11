@@ -6,10 +6,10 @@ import video3 from "@/assets/Ai_video_3.mp4";
 
 const videoExamples = [
   {
-    title: "Tech Explained",
+    title: "Faith & Inspirational",
     views: "245K views",
     likes: "12K",
-    category: "Technology",
+    category: "Faith & Kingdom Content",
     src: video1,
   },
   {

@@ -9,7 +9,7 @@ const videoExamples = [
     title: "Faith & Inspirational",
     views: "245K views",
     likes: "12K",
-    category: "Faith & Kingdom Content",
+    category: "Kingdom Content",
     src: video1,
   },
   {

@@ -149,7 +149,7 @@ const Register = () => {
                   <Input
                     id="referralCode"
                     type="text"
-                    placeholder="Enter referral code or 1 if not referred"
+                    placeholder="Enter referral Code"
                     value={referralCode}
                     onChange={(e) => setReferralCode(e.target.value)}
                     required

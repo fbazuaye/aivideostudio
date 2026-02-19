@@ -1,0 +1,1 @@
+ALTER TABLE public.training_signups ADD COLUMN IF NOT EXISTS phone_number TEXT;

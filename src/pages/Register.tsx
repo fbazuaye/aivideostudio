@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Loader2, CheckCircle, User, Mail, ArrowLeft, Users } from "lucide-react";
+import { Loader2, CheckCircle, User, Mail, ArrowLeft, Users, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,13 +13,15 @@ import { z } from "zod";
 const registerSchema = z.object({
   fullName: z.string().trim().min(2, "Full name must be at least 2 characters").max(100),
   email: z.string().trim().email("Please enter a valid email address").max(255),
-  referralCode: z.string().trim().min(1, "Please enter a referral code or 1 if not referred").max(50),
+  phoneNumber: z.string().trim().min(7, "Please enter a valid phone number").max(20, "Phone number is too long").regex(/^[+\d\s\-()]+$/, "Please enter a valid phone number"),
+  referralCode: z.string().trim().min(1, "Please enter a referral code or N if not referred").max(50),
   acceptTerms: z.literal(true, { errorMap: () => ({ message: "You must accept the Terms and Conditions" }) }),
 });
 
 const Register = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [referralCode, setReferralCode] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +30,7 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const validation = registerSchema.safeParse({ fullName, email, referralCode, acceptTerms });
+    const validation = registerSchema.safeParse({ fullName, email, phoneNumber, referralCode, acceptTerms });
     if (!validation.success) {
       toast.error(validation.error.errors[0].message);
       return;
@@ -39,7 +41,7 @@ const Register = () => {
     try {
       const { error } = await supabase
         .from("training_signups")
-        .insert({ email: email.trim().toLowerCase(), full_name: fullName.trim(), referral_code: referralCode.trim() });
+        .insert({ email: email.trim().toLowerCase(), full_name: fullName.trim(), phone_number: phoneNumber.trim(), referral_code: referralCode.trim() });
 
       if (error) {
         if (error.code === "23505") {
@@ -135,6 +137,23 @@ const Register = () => {
                     placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="bg-secondary/50 border-border"
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phoneNumber" className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-primary" />
+                    Phone Number
+                  </Label>
+                  <Input
+                    id="phoneNumber"
+                    type="tel"
+                    placeholder="+234 800 000 0000"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
                     required
                     className="bg-secondary/50 border-border"
                     disabled={isLoading}

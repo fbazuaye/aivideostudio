@@ -1,17 +1,48 @@
 
+## Show Phone Number in Admin Panel
 
-## Add Google Ads Tracking Code
+### What Will Change
 
-Add the Google Ads conversion tracking snippet (gtag.js) to the application so it loads on every page.
+The Admin dashboard signups table currently shows: `#`, `Full Name`, `Email`, `Referral Code`, and `Signed Up`. The `phone_number` field exists in the database but is not visible to admins. This update makes it visible everywhere in the Admin panel.
 
-### What will change
+### Changes to `src/pages/Admin.tsx`
 
-The Google tag (gtag.js) script with ID `AW-17953468886` will be added to the `index.html` file in the `<head>` section. This enables Google Ads conversion tracking across the entire site.
+**1. TypeScript Interface**
+Add `phone_number` to the `Signup` interface so the data is properly typed:
+```ts
+interface Signup {
+  id: string;
+  email: string;
+  full_name: string;
+  phone_number: string | null;  // ADD THIS
+  referral_code: string;
+  created_at: string;
+}
+```
 
-### Technical Details
+**2. Table Header**
+Add a "Phone Number" column header between "Email" and "Referral Code":
+```html
+<th>Phone Number</th>
+```
 
-**File: `index.html`**
-- Add the async gtag.js script tag pointing to `https://www.googletagmanager.com/gtag/js?id=AW-17953468886`
-- Add the inline configuration script that initializes the dataLayer and calls `gtag('config', 'AW-17953468886')`
-- Both scripts will be placed in the `<head>` section before the closing `</head>` tag
+**3. Table Row Cell**
+Display the phone number for each signup row (showing "—" if empty):
+```html
+<td>{signup.phone_number || "—"}</td>
+```
 
+**4. Search Filter**
+Allow admins to search signups by phone number — add `phone_number` to the filter logic:
+```ts
+s.phone_number?.toLowerCase().includes(q)
+```
+
+**5. Excel Export**
+Add "Phone Number" as a column in the downloaded Excel file:
+```ts
+"Phone Number": s.phone_number || "",
+```
+
+### No Database Changes Needed
+The `phone_number` column already exists in the database from the previous migration. This is a pure frontend display update.

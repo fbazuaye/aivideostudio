@@ -72,9 +72,10 @@ export const HeroSection = () => {
                   Click to Register
                 </Button>
               </Link>
-              <p className="text-sm text-muted-foreground mt-3">
-                No credit card required • Limited spots available
-              </p>
+              <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/40 bg-primary/5 backdrop-blur-sm">
+                <span className="text-xs font-bold text-primary uppercase tracking-wider">💳 Note:</span>
+                <span className="text-sm font-semibold text-foreground">Registration fee is <span className="text-primary">₦200.00</span> per Person</span>
+              </div>
             </motion.div>
           </motion.div>
 

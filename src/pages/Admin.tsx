@@ -12,6 +12,7 @@ interface Signup {
   id: string;
   email: string;
   full_name: string;
+  phone_number: string | null;
   referral_code: string;
   created_at: string;
 }
@@ -129,7 +130,8 @@ const Admin = () => {
       (s) =>
         s.full_name?.toLowerCase().includes(q) ||
         s.email.toLowerCase().includes(q) ||
-        s.referral_code?.toLowerCase().includes(q)
+        s.referral_code?.toLowerCase().includes(q) ||
+        s.phone_number?.toLowerCase().includes(q)
     );
   }, [signups, searchQuery]);
 
@@ -153,6 +155,7 @@ const Admin = () => {
       "#": i + 1,
       "Full Name": s.full_name || "",
       Email: s.email,
+      "Phone Number": s.phone_number || "",
       "Referral Code": s.referral_code || "1",
       "Signed Up": new Date(s.created_at).toLocaleString("en-US", {
         year: "numeric",
@@ -376,6 +379,7 @@ const Admin = () => {
                     <th className="text-left p-4 text-sm font-medium text-muted-foreground">#</th>
                     <th className="text-left p-4 text-sm font-medium text-muted-foreground">Full Name</th>
                     <th className="text-left p-4 text-sm font-medium text-muted-foreground">Email</th>
+                    <th className="text-left p-4 text-sm font-medium text-muted-foreground">Phone Number</th>
                     <th className="text-left p-4 text-sm font-medium text-muted-foreground">Referral Code</th>
                     <th className="text-left p-4 text-sm font-medium text-muted-foreground">Signed Up</th>
                   </tr>
@@ -386,6 +390,7 @@ const Admin = () => {
                       <td className="p-4 text-sm text-muted-foreground">{index + 1}</td>
                       <td className="p-4 text-sm font-medium">{signup.full_name || "—"}</td>
                       <td className="p-4 text-sm">{signup.email}</td>
+                      <td className="p-4 text-sm text-muted-foreground">{signup.phone_number || "—"}</td>
                       <td className="p-4 text-sm">
                         <span className={`inline-block px-2 py-0.5 rounded-md text-xs font-medium ${
                           signup.referral_code && signup.referral_code !== "1"
